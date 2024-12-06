@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://dfojjg7g0rwtr"]
+
+[ext_resource type="Script" path="res://actors/player/playerHandLeft.gd" id="1_6igfd"]
+[ext_resource type="Texture2D" uid="uid://olnf34a5vl1q" path="res://actors/playerLeftHand.png" id="2_ixf4v"]
+[ext_resource type="Script" path="res://actors/player/left_hand_bug_killer.gd" id="3_f0ado"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_04gyu"]
+size = Vector2(69, 224)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mbmpb"]
+size = Vector2(21, 221)
+
+[node name="PlayerHandLeft" type="CharacterBody2D"]
+collision_mask = 6
+script = ExtResource("1_6igfd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.645701, 0.645701)
+texture = ExtResource("2_ixf4v")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(88.5, -134)
+shape = SubResource("RectangleShape2D_04gyu")
+
+[node name="leftHandBugKiller" type="Area2D" parent="."]
+script = ExtResource("3_f0ado")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="leftHandBugKiller"]
+position = Vector2(120, -133)
+shape = SubResource("RectangleShape2D_mbmpb")
+
+[connection signal="body_entered" from="leftHandBugKiller" to="leftHandBugKiller" method="_on_body_entered"]
