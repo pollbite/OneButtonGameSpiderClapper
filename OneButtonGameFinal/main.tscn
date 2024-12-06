@@ -1,0 +1,92 @@
+[gd_scene load_steps=15 format=3 uid="uid://c6et665380msp"]
+
+[ext_resource type="Texture2D" uid="uid://bs6r2gco1yhoe" path="res://1.png" id="1_oeme1"]
+[ext_resource type="Script" path="res://main.gd" id="1_ot2yf"]
+[ext_resource type="Texture2D" uid="uid://b1p1dvjjlr0f4" path="res://3.png" id="2_whw1o"]
+[ext_resource type="Texture2D" uid="uid://du8gboowtosgr" path="res://4.png" id="3_wxgb3"]
+[ext_resource type="Texture2D" uid="uid://ce7n4o58wc6q7" path="res://5.png" id="4_chmer"]
+[ext_resource type="PackedScene" uid="uid://b8hfanjsmkfr4" path="res://hud.tscn" id="7_4bsf4"]
+[ext_resource type="PackedScene" uid="uid://bt77b8w8tfc2h" path="res://actors/enemies/spider_enemy.tscn" id="8_b22dy"]
+[ext_resource type="PackedScene" uid="uid://dfojjg7g0rwtr" path="res://actors/player/player_hand_left.tscn" id="8_id6pv"]
+[ext_resource type="Script" path="res://clap_area.gd" id="8_nw2d3"]
+[ext_resource type="PackedScene" uid="uid://kuc13nhsvk5d" path="res://actors/player/playerHandRight.tscn" id="9_4m0mn"]
+[ext_resource type="PackedScene" uid="uid://cyimb6y2a660t" path="res://actors/enemies/butterfly_enemy.tscn" id="9_woe1v"]
+[ext_resource type="Script" path="res://out_of_bounds.gd" id="11_epajf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nis83"]
+size = Vector2(24, 220)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nokgc"]
+size = Vector2(629, 20)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_ot2yf")
+
+[node name="1" type="Sprite2D" parent="."]
+position = Vector2(587, 325)
+scale = Vector2(2.18519, 2.18519)
+texture = ExtResource("1_oeme1")
+
+[node name="3" type="Sprite2D" parent="."]
+position = Vector2(577.889, 325.5)
+scale = Vector2(2.00309, 2.00309)
+texture = ExtResource("2_whw1o")
+
+[node name="4" type="Sprite2D" parent="."]
+position = Vector2(574, 323)
+scale = Vector2(2.03704, 2.03704)
+texture = ExtResource("3_wxgb3")
+
+[node name="5" type="Sprite2D" parent="."]
+position = Vector2(586.111, 323.5)
+scale = Vector2(2.05247, 2.05247)
+texture = ExtResource("4_chmer")
+
+[node name="HUD" parent="." instance=ExtResource("7_4bsf4")]
+
+[node name="spiderEnemy" parent="." instance=ExtResource("8_b22dy")]
+position = Vector2(574, 271)
+
+[node name="butterfly_enemy" parent="." instance=ExtResource("9_woe1v")]
+position = Vector2(378, 174)
+
+[node name="MeetingPoint" type="Marker2D" parent="."]
+position = Vector2(576, 497)
+
+[node name="ClapArea" type="Area2D" parent="." groups=["clap"]]
+collision_layer = 2
+collision_mask = 13
+script = ExtResource("8_nw2d3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClapArea"]
+position = Vector2(575, 473)
+shape = SubResource("RectangleShape2D_nis83")
+
+[node name="PlayerHandLeft" parent="." instance=ExtResource("8_id6pv")]
+position = Vector2(385, 609)
+
+[node name="PlayerHandRight" parent="." instance=ExtResource("9_4m0mn")]
+position = Vector2(759, 612)
+
+[node name="OutOfBounds" type="Area2D" parent="."]
+position = Vector2(321, 433)
+script = ExtResource("11_epajf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OutOfBounds"]
+position = Vector2(258.5, 226)
+shape = SubResource("RectangleShape2D_nokgc")
+
+[node name="SpawnPoint" type="Marker2D" parent="."]
+position = Vector2(575, -70)
+
+[node name="EnemySpawnTimer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[node name="ButterflySpawnTimer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="body_entered" from="ClapArea" to="ClapArea" method="_on_body_entered"]
+[connection signal="body_entered" from="OutOfBounds" to="OutOfBounds" method="_on_body_entered"]
+[connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]
+[connection signal="timeout" from="ButterflySpawnTimer" to="." method="_on_butterfly_spawn_timer_timeout"]
